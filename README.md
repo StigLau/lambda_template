@@ -1,0 +1,1 @@
+Terraform Java snapstart Lambda template
