@@ -1,12 +1,11 @@
 provider "aws" {
 }
-resource "aws_lambda_function" "hello_world_function" {
+resource "aws_lambda_function" "lambda_template_function" {
   function_name = "skarab_function"
   filename = "${var.lambda_payload_filename}"
 
-  role = "${aws_iam_role.lambda_apigateway_iam_role.arn}"
-  #role = aws_iam_role.UnicornStockBrokerFunctionRole.arn
-  handler = "no.lau.skarab.LambdaHandler"
+  role = "${aws_iam_role.lambda_template_iam_role.arn}"
+  handler = "template.LambdaHandler"
   source_code_hash = "${filebase64sha256(var.lambda_payload_filename)}"
   runtime = "java17"
 
@@ -21,7 +20,7 @@ resource "aws_lambda_function" "hello_world_function" {
 
   environment {
     variables = {
-      currentLocation = "Hæstepølse"
+      currentLocation = "Here"
     }
   }
 }

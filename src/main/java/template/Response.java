@@ -1,4 +1,4 @@
-package skarab;
+package template;
 
 public class Response {
 

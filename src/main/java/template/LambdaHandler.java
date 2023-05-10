@@ -1,4 +1,4 @@
-package skarab;
+package template;
 
 
 import com.amazonaws.services.lambda.runtime.Context;
