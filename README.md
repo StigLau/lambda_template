@@ -1,4 +1,12 @@
-Terraform Java snapstart Lambda template
+# Terraform Java snapstart Lambda template
+This is a template for enabling the craziest architecture ever: 
+* Easy packaing of ANY horrible (Spring Boot?) java-app inside AWS Lambda
+* Snapstart for enabling lighting-fast startup
+* Step Functions for performing orchestration of 1-many lambdas (functions from one or more apps)
+* API Gateway for http access
+* Terraform for easy deployment
+
+_NOTE: Auhtentication || Security || Batteries NOT INCLUDED_
 
 ## Terraform config example:
 ### Add file ./eu-west-1.tfvars
@@ -17,8 +25,30 @@ Terraform Java snapstart Lambda template
 > 
 > terraform init
 > 
-> terraform apply -var-file=eu-west-1.tfvars
+> _terraform apply -var-file=eu-west-1.tfvars #DEPLOY TO AWS:_
+
+## Invoking
+curl "$(terraform output -raw base_url)/your_bath"
 
 ## Cleanup
 
 > terraform destroy -var-file=eu-west-1.tfvars
+> 
+## Setting up bucket-storage for Terraform state
+
+> terraform {
+> 
+>   backend "s3" {
+> 
+>     bucket = "lambda-demo-terraform"
+> 
+>     key = "lambda-dev.tfstate"
+> 
+>     region = var.aws_region
+> 
+>     dynamodb_table = "lambda-dev-terraform-state"
+> 
+>   }
+> 
+> }
+> 

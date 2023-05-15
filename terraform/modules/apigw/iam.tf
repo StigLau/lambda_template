@@ -27,11 +27,11 @@ data "aws_iam_policy_document" "policy" {
 
 resource "aws_iam_policy" "policy" {
   name        = "ApiGwSfnPolicy"
-  description = "A test policy"
+  description = "ApiGwSfn policy"
   policy      = data.aws_iam_policy_document.policy.json
 }
 
-resource "aws_iam_policy_attachment" "test-attach" {
+resource "aws_iam_policy_attachment" "policy-attach" {
   name       = "ApiGwSfnPolicyAttachment"
   roles      = [aws_iam_role.ApigwSfnRole.name]
   policy_arn = aws_iam_policy.policy.arn

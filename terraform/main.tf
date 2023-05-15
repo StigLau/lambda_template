@@ -19,18 +19,7 @@ module "lambda" {
   lambda_payload_filename = var.lambda_payload_filename
 }
 
-module "apigw-2" {
-  source = "./modules/apigw-2"
-  #  apigw_input =module.lambda.lambda_properties
-  apigw_target_arn = module.sfn.sfn_arn
-  #  deployment_prefix = var.deployment_prefix
+module "apigw" {
+  source = "./modules/apigw"
+  sfn_arn = module.sfn.sfn_arn
 }
-
-#terraform {
-#  backend "s3" {
-#    bucket = "lambda-demo-terraform"
-#    key = "lambda-dev.tfstate"
-#    region = var.aws_region
-#        dynamodb_table = "lambda-dev-terraform-state"
-#  }
-#}
