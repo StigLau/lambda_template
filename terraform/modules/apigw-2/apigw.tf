@@ -32,10 +32,10 @@ resource "aws_apigatewayv2_integration" "sfn_integration" {
   api_id = aws_apigatewayv2_api.lambda.id
   integration_subtype = "StepFunctions-StartExecution"
   integration_type = "AWS_PROXY"
-  #credentials_arn = aws_iam_role.apigw_sfn_role.arn
-  credentials_arn = "arn:aws:iam::908262071533:role/APIGatewayToStepFunctions"
+  credentials_arn = aws_iam_role.ApigwSfnRole.arn
   request_parameters = {
     StateMachineArn = "arn:aws:states:eu-west-1:908262071533:stateMachine:LambdaTestingStepFunction"
+    #StateMachineArn = var.apigw_target_arn
     Input           = "$request.body"
   }
 }

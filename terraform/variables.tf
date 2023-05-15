@@ -1,5 +1,6 @@
 variable "aws_region" {
   type = string
+  description = "AWS Region"
 }
 
 variable "deployment_prefix" {
@@ -10,5 +11,5 @@ variable "deployment_prefix" {
 
 variable "lambda_payload_filename" {
   type = string
-  description = "Where the lambda jar file is located"
+  description = "Where the lambda/jar file is located"
 }

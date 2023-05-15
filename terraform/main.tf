@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
 module "sfn" {
   source = "./modules/sfn"
   deployment_prefix = var.deployment_prefix
@@ -12,9 +21,9 @@ module "lambda" {
 
 module "apigw-2" {
   source = "./modules/apigw-2"
-#  apigw_input =module.lambda.lambda_properties
+  #  apigw_input =module.lambda.lambda_properties
   apigw_target_arn = module.sfn.sfn_arn
-#  deployment_prefix = var.deployment_prefix
+  #  deployment_prefix = var.deployment_prefix
 }
 
 #terraform {
