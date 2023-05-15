@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "lambda" {
-  name = "serverless_lambda_gw"
+  name = "sfn_gw"
   protocol_type = "HTTP"
 }
 
@@ -28,18 +28,24 @@ resource "aws_apigatewayv2_stage" "lambda" {
   }
 }
 
-resource "aws_apigatewayv2_integration" "hello_world" {
+resource "aws_apigatewayv2_integration" "sfn_integration" {
   api_id = aws_apigatewayv2_api.lambda.id
-
-  integration_uri = var.apigw_input["invoke_arn"]
+  integration_subtype = "StepFunctions-StartExecution"
   integration_type = "AWS_PROXY"
-  integration_method = "POST"
+  #credentials_arn = aws_iam_role.apigw_sfn_role.arn
+  credentials_arn = "arn:aws:iam::908262071533:role/APIGatewayToStepFunctions"
+  request_parameters = {
+    StateMachineArn = "arn:aws:states:eu-west-1:908262071533:stateMachine:LambdaTestingStepFunction"
+    Input           = "$request.body"
+  }
 }
 
-resource "aws_apigatewayv2_route" "hello_world" {
+resource "aws_apigatewayv2_route" "sfn_route" {
   api_id = aws_apigatewayv2_api.lambda.id
-  route_key = "GET /hello"
-  target = "integrations/${aws_apigatewayv2_integration.hello_world.id}"
+  route_key = "POST /sfn"
+  #authorization_scopes = []
+  #request_models       = {}
+  target = "integrations/${aws_apigatewayv2_integration.sfn_integration.id}"
 }
 
 resource "aws_cloudwatch_log_group" "api_gw" {
@@ -47,10 +53,39 @@ resource "aws_cloudwatch_log_group" "api_gw" {
   retention_in_days = 30
 }
 
-resource "aws_lambda_permission" "api_gw" {
-  statement_id = "AllowExecutionFromAPIGateway"
-  action = "lambda:InvokeFunction"
-  function_name = var.apigw_input["function_name"]
-  principal = "apigateway.amazonaws.com"
-  source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
-}
+
+#resource "aws_iam_role_policy_attachment" "lambda_policy" {
+#  role       = aws_iam_role.lambda_exec.name
+#  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+#}
+#
+#resource "aws_iam_role" "lambda_exec" {
+#  name    = "api_gateway_role"
+#
+#  assume_role_policy = jsonencode({
+#    "Version": "2012-10-17",
+#    "Statement": [
+#      {
+#        "Sid": "",
+#        "Effect": "Allow",
+#        "Principal": {
+#          "Service": [
+#            "apigateway.amazonaws.com",
+#            "lambda.amazonaws.com"
+#          ]
+#        },
+#        "Action": "sts:AssumeRole"
+#      }
+#    ]
+#  })
+#}
+
+#resource "aws_lambda_permission" "prod_api_gtw" {
+#  statement_id  = "AllowExecutionFromApiGateway"
+#  action        = "lambda:InvokeFunction"
+#  function_name = aws_lambda_function.prod_options.function_name
+#  principal     = "apigateway.amazonaws.com"
+#
+#  source_arn = "${aws_apigatewayv2_api.gateway_prod.execution_arn}/*/*"
+#
+#}
