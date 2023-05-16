@@ -51,4 +51,7 @@ curl "$(terraform output -raw base_url)/your_bath"
 >   }
 > 
 > }
-> 
+
+#Inspiration 
+
+https://developer.hashicorp.com/terraform/tutorials/aws/lambda-api-gateway
