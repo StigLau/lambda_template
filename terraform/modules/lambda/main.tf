@@ -13,7 +13,7 @@ resource "aws_lambda_function" "lambda_template_function" {
 
   #timeout     = "200"
   #memory_size = "2048"
-  #publish = true
+  publish = true
 
   environment {
     variables = {
